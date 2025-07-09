@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy 18th Birthday Jaan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #ffc0cb, #ffb6c1, #ff69b4);
+      font-family: 'Arial', sans-serif;
+      color: #8b0000;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      margin: 20px 0;
+    }
+    
+    h1 {
+      font-size: 2.2rem;
+      color: #d80032;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      margin-bottom: 15px;
+    }
+    
+    .slideshow-container {
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      margin: 0 auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .slide-wrapper {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      max-height: 500px;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .mySlides {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    
+    .mySlides.active {
+      opacity: 1;
+    }
+    
+    .mySlides img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.8);
+      color: #d80032;
+      padding: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .dot-container {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
+      gap: 8px;
+    }
+    
+    .dot {
+      cursor: pointer;
+      height: 12px;
+      width: 12px;
+      background-color: #ffb6c1;
+      border-radius: 50%;
+      transition: background-color 0.6s ease;
+    }
+    
+    .dot.active {
+      background-color: #d80032;
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .slide-wrapper {
+        height: 50vh;
+      }
+      
+      .caption {
+        font-size: 1rem;
+        padding: 8px;
+      }
+      
+      .dot {
+        height: 10px;
+        width: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Happy 18th Birthday to You Jaan</h1>
+  </div>
+  
+  <div class="slideshow-container">
+    <div class="slide-wrapper">
+      <!-- Slides will be inserted here by JavaScript -->
+    </div>
+    <div class="dot-container">
+      <!-- Dots will be inserted here by JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Photo data - add your images and captions here
+    const photos = [
+      { src: "images/photo1.jpg", caption: "My Beautiful Jaan" },
+      { src: "images/photo2.jpg", caption: "I Love You" },
+      { src: "images/photo3.jpg", caption: "You're My Everything" },
+      { src: "images/photo4.jpg", caption: "Happy Birthday" },
+      { src: "images/photo5.jpg", caption: "My Love" },
+      { src: "images/photo6.jpg", caption: "Forever Yours" }
+      // Add more photos as needed
+    ];
+
+    // Initialize slideshow
+    const slideWrapper = document.querySelector('.slide-wrapper');
+    const dotContainer = document.querySelector('.dot-container');
+    let currentSlide = 0;
+
+    // Create slides and dots
+    photos.forEach((photo, index) => {
+      // Create slide
+      const slide = document.createElement('div');
+      slide.className = 'mySlides';
+      slide.innerHTML = `
+        <img src="${photo.src}" alt="Birthday photo ${index + 1}">
+        <div class="caption">${photo.caption}</div>
+      `;
+      slideWrapper.appendChild(slide);
+
+      // Create dot
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dot.addEventListener('click', () => goToSlide(index));
+      dotContainer.appendChild(dot);
+    });
+
+    // Show first slide
+    const slides = document.querySelectorAll('.mySlides');
+    const dots = document.querySelectorAll('.dot');
+    slides[0].classList.add('active');
+    dots[0].classList.add('active');
+
+    // Auto-rotate slides
+    function nextSlide() {
+      goToSlide((currentSlide + 1) % photos.length);
+    }
+
+    function goToSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      
+      currentSlide = index;
+      
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    // Change slide every 5 seconds
+    setInterval(nextSlide, 5000);
+
+    // Handle swipe for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    slideWrapper.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    slideWrapper.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+      if (touchEndX < touchStartX - 50) {
+        nextSlide(); // Swipe left
+      }
+      if (touchEndX > touchStartX + 50) {
+        goToSlide((currentSlide - 1 + photos.length) % photos.length); // Swipe right
+      }
+    }
+  </script>
+</body>
+</html>
